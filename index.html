@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>🐰 跳崽小厨 · Tiao Zai Kitchen</title>
+<style>
+  :root{
+    --bg-1:#fff5e6;
+    --bg-2:#ffe1ec;
+    --bg-3:#e0f7ff;
+    --ink:#3a2a1a;
+    --ink-soft:#7a6a5a;
+    --line:#f0d9b8;
+    --card:#ffffff;
+    --accent:#ff6b6b;
+    --accent-2:#ffa53b;
+    --accent-3:#4ecdc4;
+    --good:#2ecc71;
+    --shadow:0 8px 24px rgba(255,140,80,.18);
+    --shadow-strong:0 16px 40px rgba(255,140,80,.28);
+    --radius:22px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family: "Noto Sans TC","Noto Sans Thai","PingFang TC","Microsoft JhengHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 10% 0%, #ffe8c2 0%, transparent 60%),
+      radial-gradient(1000px 500px at 100% 10%, #ffd1e0 0%, transparent 60%),
+      radial-gradient(800px 600px at 50% 100%, #cdeeff 0%, transparent 60%),
+      linear-gradient(180deg,#fffaf0 0%,#fff 100%);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ====== Header ====== */
+  header{
+    position:sticky;top:0;z-index:20;
+    backdrop-filter:saturate(1.2) blur(10px);
+    background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.6));
+    border-bottom:1px solid rgba(255,180,120,.25);
+  }
+  .nav{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;gap:14px;
+    padding:14px 20px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-weight:900;font-size:22px;letter-spacing:.5px;
+  }
+  .logo .badge{
+    width:44px;height:44px;border-radius:14px;
+    background:linear-gradient(135deg,#ff8a3d,#ffd23f);
+    display:grid;place-items:center;font-size:26px;
+    box-shadow:var(--shadow);
+  }
+  .logo .sub{
+    font-size:12px;font-weight:600;color:var(--ink-soft);margin-top:2px;
+  }
+  .spacer{flex:1}
+  .lang{
+    display:flex;flex-wrap:nowrap;flex-shrink:0;
+    background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:4px;box-shadow:var(--shadow);
+  }
+  .lang button{
+    border:0;background:transparent;cursor:pointer;
+    font-weight:800;padding:8px 14px;border-radius:999px;
+    color:var(--ink-soft);font-size:14px;
+    transition:.2s;white-space:nowrap;flex-shrink:0;
+  }
+  .lang button.active{
+    background:linear-gradient(135deg,#ff8a3d,#ffd23f);
+    color:#fff;box-shadow:0 4px 12px rgba(255,138,61,.5);
+  }
+  .cart-btn{
+    position:relative;border:0;cursor:pointer;
+    background:linear-gradient(135deg,#ff6b6b,#ffa53b);
+    color:#fff;font-weight:800;
+    padding:10px 16px;border-radius:999px;
+    display:inline-flex;flex-wrap:nowrap;align-items:center;gap:8px;
+    font-size:15px;line-height:1;height:42px;
+    box-shadow:var(--shadow);
+    transition:transform .15s;
+    flex-shrink:0;white-space:nowrap;
+  }
+  .cart-btn > *{flex-shrink:0}
+  .cart-btn:hover{transform:translateY(-2px)}
+  .cart-btn:active{transform:translateY(0)}
+  .cart-count{
+    background:#fff;color:#ff6b6b;font-weight:900;
+    border-radius:999px;min-width:22px;height:22px;padding:0 6px;
+    display:inline-grid;place-items:center;font-size:12px;
+  }
+  .cart-count.empty{background:rgba(255,255,255,.4);color:#fff}
+
+  /* ====== Hero ====== */
+  .hero{
+    max-width:1200px;margin:0 auto;padding:30px 20px 10px;
+    text-align:center;
+  }
+  .hero h1{
+    font-size:clamp(28px,4vw,44px);margin:0 0 6px;
+    background:linear-gradient(90deg,#ff6b6b,#ffa53b,#4ecdc4,#7c5cff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:900;letter-spacing:1px;
+  }
+  .hero p{margin:0;color:var(--ink-soft);font-size:15px}
+
+  /* ====== Category bar ====== */
+  .catbar{
+    display:flex;gap:10px;flex-wrap:nowrap;
+    padding:4px 4px 14px;margin:0 -4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+    scroll-snap-type:x mandatory;
+  }
+  .catbar::-webkit-scrollbar{display:none}
+  .cat{
+    flex:0 0 auto;scroll-snap-align:start;
+    border:0;cursor:pointer;
+    background:#fff;
+    border:2px solid #ffe1c2;
+    color:var(--ink);
+    padding:10px 18px;border-radius:999px;
+    font-weight:800;font-size:15px;
+    display:inline-flex;align-items:center;gap:8px;
+    box-shadow:0 4px 10px rgba(255,180,120,.12);
+    transition:transform .15s, background .2s, color .2s, border-color .2s;
+    white-space:nowrap;
+  }
+  .cat:hover{transform:translateY(-2px)}
+  .cat .ic{font-size:18px;line-height:1}
+  .cat .n{font-size:11px;font-weight:900;
+    background:#fff0ec;color:#ff6b6b;
+    padding:2px 7px;border-radius:999px;line-height:1.4;
+  }
+  .cat.active{
+    background:linear-gradient(135deg,#ff6b6b,#ffa53b);
+    color:#fff;border-color:transparent;
+    box-shadow:0 8px 20px rgba(255,107,107,.4);
+  }
+  .cat.active .n{background:rgba(255,255,255,.95);color:#ff6b6b}
+  @media (max-width:520px){
+    .cat{padding:9px 14px;font-size:14px}
+  }
+
+  /* empty category state */
+  .empty-cat{
+    text-align:center;color:var(--ink-soft);
+    padding:40px 20px;font-size:15px;line-height:1.7;
+  }
+  .empty-cat .big{font-size:60px;display:block;margin-bottom:8px}
+
+  /* ====== Menu grid ====== */
+  main{max-width:1200px;margin:0 auto;padding:20px 20px 140px}
+  .grid{
+    display:grid;gap:18px;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  }
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    border:1px solid rgba(255,180,120,.18);
+    transition:transform .2s,box-shadow .2s;
+    cursor:pointer;
+    position:relative;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-strong)}
+  .card .pic{
+    height:150px;
+    display:grid;place-items:center;
+    font-size:96px;line-height:1;
+    background:linear-gradient(135deg,#fff3df,#ffe1ec 60%,#d6f4ff);
+    position:relative;
+    user-select:none;
+    overflow:hidden;
+  }
+  .card .pic img{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    transition:transform .35s ease;
+  }
+  .card:hover .pic.has-img img{transform:scale(1.06)}
+  .card .pic .emoji{
+    position:absolute;bottom:8px;right:8px;
+    font-size:30px;line-height:1;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(6px);
+    padding:5px 8px;border-radius:10px;
+    box-shadow:0 3px 8px rgba(0,0,0,.18);
+    z-index:2;
+    transition:transform .25s;
+  }
+  .card .pic:not(.has-img) .emoji{
+    position:static;background:transparent;
+    box-shadow:none;backdrop-filter:none;
+    font-size:96px;padding:0;
+  }
+  .card .pic::after{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 55%);
+    pointer-events:none;z-index:1;
+  }
+  .card .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .card .name{font-size:18px;font-weight:900;line-height:1.2}
+  .card .desc{font-size:13px;color:var(--ink-soft);line-height:1.35;min-height:34px}
+  .card .row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+  .price{
+    font-weight:900;font-size:18px;color:#ff6b6b;
+    background:#fff0ec;padding:4px 10px;border-radius:10px;
+  }
+  .add{
+    border:0;cursor:pointer;
+    background:linear-gradient(135deg,#4ecdc4,#2ecc71);
+    color:#fff;font-weight:900;
+    padding:8px 14px;border-radius:12px;font-size:14px;
+    display:flex;align-items:center;gap:6px;
+    box-shadow:0 4px 12px rgba(46,204,113,.35);
+    transition:transform .15s;
+  }
+  .add:hover{transform:scale(1.05)}
+  .add:active{transform:scale(.96)}
+
+  /* tiny category label on card corner */
+  .tag{
+    position:absolute;top:10px;left:10px;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(6px);
+    color:#ff6b6b;font-weight:900;font-size:11px;
+    padding:4px 8px;border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,.06);
+  }
+
+  /* ====== No FAB — header cart is always visible ====== */
+  .gear-btn{
+    border:0;background:transparent;cursor:pointer;
+    font-size:22px;line-height:1;
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .2s, transform .15s;
+    filter:saturate(.4);
+  }
+  .gear-btn:hover{background:rgba(255,180,120,.15);transform:rotate(45deg);filter:saturate(1)}
+
+  /* ====== Admin panel ====== */
+  .admin-panel{max-width:600px;width:100%;text-align:left;max-height:90vh;overflow:auto;padding:22px 22px 18px}
+  .admin-header{display:flex;align-items:center;gap:10px;padding:0 0 14px;border-bottom:1px dashed var(--line);margin-bottom:14px}
+  .admin-header h3{margin:0;font-size:20px;flex:1}
+  .admin-pin-gate{text-align:center;padding:30px 10px}
+  .admin-pin-gate .lock{font-size:56px;line-height:1;margin-bottom:8px}
+  .admin-pin-gate p{margin:6px 0}
+  .admin-pin-input{
+    font-size:32px;letter-spacing:10px;text-align:center;
+    width:170px;padding:10px 8px;
+    border:2px solid var(--line);border-radius:14px;
+    background:#fff;color:var(--ink);
+    font-weight:900;font-family:inherit;
+    display:block;margin:14px auto 6px;
+  }
+  .admin-pin-input:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,107,107,.2)}
+  .pin-hint{color:var(--ink-soft);font-size:12px}
+  .pin-error{color:#e74c3c;font-size:14px;font-weight:700;min-height:20px}
+  .pin-shake{animation:shake .4s}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%,60%{transform:translateX(-8px)}
+    40%,80%{transform:translateX(8px)}
+  }
+  .admin-sub{color:var(--ink-soft);font-size:13px;margin:0 0 12px}
+  .admin-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  }
+  @media (min-width:520px){.admin-grid{grid-template-columns:repeat(3,1fr)}}
+  .admin-item{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:8px;text-align:center;
+  }
+  .admin-thumb{
+    height:80px;background:#fff3df;border-radius:10px;overflow:hidden;
+    display:grid;place-items:center;margin-bottom:6px;
+    font-size:42px;line-height:1;
+  }
+  .admin-thumb img{width:100%;height:100%;object-fit:cover}
+  .admin-thumb .custom-badge{
+    position:absolute;top:4px;left:4px;
+    background:#ff6b6b;color:#fff;font-size:9px;font-weight:900;
+    padding:2px 5px;border-radius:99px;
+  }
+  .admin-thumb{position:relative}
+  .admin-name{font-size:12px;font-weight:800;line-height:1.2;min-height:30px;display:flex;align-items:center;justify-content:center}
+  .admin-actions{display:flex;gap:5px;margin-top:5px}
+  .admin-upload,.admin-reset{
+    flex:1;cursor:pointer;border:0;border-radius:8px;
+    font-size:10px;font-weight:800;padding:6px 2px;
+    display:flex;align-items:center;justify-content:center;gap:2px;
+    font-family:inherit;line-height:1;
+  }
+  .admin-upload{background:#e0f7ff;color:#2d8fb3;cursor:pointer}
+  .admin-reset{background:#fff0ec;color:#ff6b6b;cursor:pointer}
+  .admin-reset:disabled{opacity:.35;cursor:default}
+  .admin-footer{margin-top:14px;text-align:center;border-top:1px dashed var(--line);padding-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .change-pin-btn{background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:6px 14px;border-radius:99px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:700}
+  .change-pin-btn:hover{background:#fff3df}
+
+  /* ====== Drawer (cart) ====== */
+  .scrim{
+    position:fixed;inset:0;background:rgba(40,20,10,.4);
+    z-index:40;opacity:0;pointer-events:none;transition:opacity .2s;
+  }
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;
+    width:min(420px,100%);
+    background:#fffaf2;z-index:50;
+    transform:translateX(100%);transition:transform .25s ease;
+    display:flex;flex-direction:column;
+    box-shadow:-12px 0 40px rgba(0,0,0,.18);
+  }
+  .drawer.open{transform:translateX(0)}
+  .drawer header{
+    position:static;background:transparent;border:0;
+    padding:18px 20px 6px;display:flex;align-items:center;gap:10px;
+  }
+  .drawer header h2{margin:0;font-size:22px}
+  .close{
+    margin-left:auto;border:0;background:#fff;
+    width:38px;height:38px;border-radius:12px;cursor:pointer;
+    font-size:20px;box-shadow:var(--shadow);
+  }
+  .drawer .list{
+    flex:1;overflow:auto;padding:6px 16px 12px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .empty{
+    margin:30px auto;text-align:center;color:var(--ink-soft);
+    font-size:14px;line-height:1.6;
+  }
+  .empty .big{font-size:60px;display:block;margin-bottom:8px}
+  .row-item{
+    display:flex;align-items:center;gap:10px;
+    background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:10px;
+  }
+  .row-item .emoji{font-size:38px;line-height:1;width:50px;text-align:center}
+  .row-item .meta{flex:1;min-width:0}
+  .row-item .nm{font-weight:900;font-size:15px;line-height:1.2}
+  .row-item .pr{color:#ff6b6b;font-weight:900;font-size:13px;margin-top:2px}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty button{
+    width:30px;height:30px;border-radius:10px;border:0;cursor:pointer;
+    background:#fff3df;font-size:18px;font-weight:900;color:#ff6b6b;
+    box-shadow:inset 0 0 0 1px var(--line);
+  }
+  .qty button:hover{background:#ffe2b8}
+  .qty .n{min-width:22px;text-align:center;font-weight:900}
+  .row-item .rm{
+    background:transparent;border:0;cursor:pointer;
+    color:#bbb;font-size:20px;line-height:1;padding:6px;
+  }
+  .row-item .rm:hover{color:#ff6b6b}
+
+  .drawer footer{
+    border-top:1px dashed var(--line);
+    padding:14px 18px 18px;background:#fff5e6;
+  }
+  .total{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:18px;font-weight:900;margin-bottom:12px;
+  }
+  .total .v{color:#ff6b6b;font-size:22px}
+  .checkout{
+    width:100%;border:0;cursor:pointer;
+    background:linear-gradient(135deg,#ff6b6b,#ffa53b);
+    color:#fff;font-weight:900;font-size:18px;
+    padding:14px;border-radius:16px;
+    box-shadow:0 8px 20px rgba(255,107,107,.4);
+    transition:transform .15s;
+  }
+  .checkout:hover{transform:translateY(-2px)}
+  .checkout:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
+  .clear{
+    width:100%;margin-top:8px;border:0;cursor:pointer;background:transparent;
+    color:var(--ink-soft);font-size:13px;text-decoration:underline;
+  }
+
+  /* ====== Toast ====== */
+  .toast{
+    position:fixed;left:50%;bottom:90px;transform:translate(-50%,30px);
+    background:#3a2a1a;color:#fff;padding:12px 18px;border-radius:14px;
+    font-weight:700;font-size:14px;z-index:60;opacity:0;pointer-events:none;
+    transition:.25s;box-shadow:0 12px 30px rgba(0,0,0,.25);
+    display:flex;align-items:center;gap:8px;
+  }
+  .toast.show{transform:translate(-50%,0);opacity:1}
+
+  /* ====== Receipt modal ====== */
+  .modal-scrim{
+    position:fixed;inset:0;background:rgba(20,10,5,.6);
+    display:none;align-items:center;justify-content:center;z-index:70;
+    padding:20px;
+  }
+  .modal-scrim.open{display:flex}
+  .receipt{
+    background:#fffaf0;border-radius:24px;max-width:380px;width:100%;
+    padding:24px 22px;text-align:center;position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,.4);
+    animation:pop .35s cubic-bezier(.2,1.4,.4,1);
+  }
+  @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+  .receipt .cook{font-size:72px;line-height:1;margin-bottom:6px}
+  .receipt h3{margin:0 0 4px;font-size:22px}
+  .receipt .sub{color:var(--ink-soft);font-size:13px;margin-bottom:14px}
+  .receipt .lines{
+    background:#fff;border:1px dashed var(--line);
+    border-radius:14px;padding:12px 14px;
+    text-align:left;font-size:14px;line-height:1.7;
+    max-height:240px;overflow:auto;
+  }
+  .receipt .lines .li{display:flex;justify-content:space-between;gap:10px}
+  .receipt .sum{
+    display:flex;justify-content:space-between;font-weight:900;
+    border-top:2px dashed var(--line);padding-top:8px;margin-top:8px;
+    color:#ff6b6b;font-size:18px;
+  }
+  .receipt .ok{
+    margin-top:16px;width:100%;border:0;cursor:pointer;
+    background:linear-gradient(135deg,#4ecdc4,#2ecc71);color:#fff;
+    font-weight:900;font-size:16px;padding:12px;border-radius:14px;
+    box-shadow:0 8px 20px rgba(46,204,113,.4);
+  }
+
+  /* confetti */
+  .confetti{
+    position:fixed;top:-10px;width:10px;height:14px;
+    z-index:80;pointer-events:none;border-radius:2px;
+    animation:fall 1.6s linear forwards;
+  }
+  @keyframes fall{
+    0%{transform:translateY(0) rotate(0);opacity:1}
+    100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+  }
+
+  /* small floating plus animation when adding to cart */
+  .float-plus{
+    position:fixed;pointer-events:none;font-size:30px;font-weight:900;
+    color:#ff6b6b;z-index:35;
+    animation:floatup .9s ease-out forwards;
+  }
+  @keyframes floatup{
+    0%{transform:translate(-50%,0) scale(1);opacity:1}
+    100%{transform:translate(-50%,-90px) scale(1.6);opacity:0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">
+      <div class="badge">🐰</div>
+      <div>
+        <div data-i18n="brand">彩虹小廚</div>
+        <div class="sub" data-i18n="brandSub">小小廚師的美味菜單</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="lang" role="tablist" aria-label="language">
+      <button data-lang="zh" class="active">中文</button>
+      <button data-lang="en">EN</button>
+      <button data-lang="th">ไทย</button>
+    </div>
+    <button class="gear-btn" id="openAdmin" title="管理圖片" aria-label="Admin">⚙️</button>
+    <button class="cart-btn" id="openCart">
+      <span>🛒</span>
+      <span class="lbl" data-i18n="cart">購物車</span>
+      <span class="cart-count empty" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1 data-i18n="heroTitle">挑你喜歡的菜，丟進我的餐盤！</h1>
+  <p data-i18n="heroSub">👨‍🍳 點一點卡片就能點餐 · 玩完記得按「結帳」請大人幫忙</p>
+</section>
+
+<main>
+  <nav class="catbar" id="catbar" aria-label="menu categories"></nav>
+  <div class="grid" id="grid"></div>
+  <div class="empty-cat" id="emptyCat" hidden>
+    <div class="big">🍽️</div>
+    <div data-i18n="noItems">這分類目前沒有菜～試試別的分類吧！</div>
+  </div>
+</main>
+
+<!-- Cart drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <header>
+    <span style="font-size:26px">🛒</span>
+    <h2 data-i18n="myOrder">我的餐盤</h2>
+    <button class="close" id="closeCart" aria-label="close">✕</button>
+  </header>
+  <div class="list" id="cartList"></div>
+  <footer>
+    <div class="total">
+      <span data-i18n="total">合計</span>
+      <span class="v"><span id="cartTotal">0</span> ฿</span>
+    </div>
+    <button class="checkout" id="checkout" data-i18n="checkout">結帳 👨‍🍳</button>
+    <button class="clear" id="clearCart" data-i18n="clear">清空餐盤</button>
+  </footer>
+</aside>
+
+<div class="toast" id="toast">🍽️</div>
+
+<!-- Receipt modal -->
+<div class="modal-scrim" id="modal">
+  <div class="receipt">
+    <div class="cook">👨‍🍳🍳</div>
+    <h3 data-i18n="orderSent">訂單送給廚房啦！</h3>
+    <div class="sub" data-i18n="orderSub">等一下下就好囉～</div>
+    <div class="lines" id="receiptLines"></div>
+    <button class="ok" id="receiptOk" data-i18n="thanks">謝謝，我等！</button>
+  </div>
+</div>
+
+<!-- Admin modal: PIN gate + photo manager -->
+<div class="modal-scrim" id="adminModal">
+  <div class="receipt admin-panel">
+    <div class="admin-header">
+      <span style="font-size:24px">⚙️</span>
+      <h3 data-i18n="adminTitle">管理圖片</h3>
+      <button class="close" id="closeAdmin" aria-label="close">✕</button>
+    </div>
+
+    <div id="adminPinGate" class="admin-pin-gate">
+      <div class="lock">🔒</div>
+      <p data-i18n="enterPin">請輸入管理員 PIN</p>
+      <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="admin-pin-input" id="adminPinInput" autocomplete="off">
+      <p class="pin-hint" data-i18n="defaultPin">預設 PIN: 0000</p>
+      <p class="pin-error" id="pinError" hidden></p>
+    </div>
+
+    <div id="adminContent" hidden>
+      <p class="admin-sub" data-i18n="adminSub">📷 上傳你自己的食物照片，會覆蓋預設圖</p>
+      <div class="admin-grid" id="adminGrid"></div>
+      <div class="admin-footer">
+        <button class="change-pin-btn" id="changePinBtn" data-i18n="changePin">更改 PIN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============= Data ============= */
+// Each item has a `tags` array so it can show in multiple filter categories.
+// e.g. 紅燒肉 is both "today" (today's pick) and "featured" and "main".
+const MENU = [
+  /* === 主菜 (7) === */
+  {id:'tomato_egg',  cat:'main',   emoji:'🍅', price:28, tags:['today','main'],
+    img:'https://www.themealdb.com/images/media/meals/rwvw8q1765660071.jpg',
+    name:    {zh:'番茄炒蛋',   en:'Tomato & Eggs',     th:'ไข่ผัดมะเขือเทศ'},
+    desc:    {zh:'酸酸甜甜超下飯，童年最愛',  en:'Sweet & tangy classic, kid favorite',  th:'เปรี้ยวหวาน กินกับข้าวอร่อย'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+  {id:'tofu_pork',   cat:'main',   emoji:'🥘', price:32, tags:['main'],
+    img:'https://www.themealdb.com/images/media/meals/1525874812.jpg',
+    name:    {zh:'肉末豆腐',   en:'Tofu w/ Minced Pork', th:'เต้าหู้หมูสับ'},
+    desc:    {zh:'嫩豆腐配上香香肉末',         en:'Silken tofu with savory pork',        th:'เต้าหู้นุ่มคู่กับหมูสับ'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+  {id:'hong_shao',   cat:'main',   emoji:'🥩', price:58, tags:['today','featured','main'],
+    name:    {zh:'紅燒肉',     en:'Braised Pork Belly',  th:'หมูแดง'},
+    desc:    {zh:'油亮入味，入口即化',         en:'Glossy, melt-in-your-mouth pork',     th:'หมูตุ๋นน้ำแดง นุ่มละลาย'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+  {id:'potato_egg',  cat:'main',   emoji:'🍆', price:30, tags:['main'],
+    img:'https://www.themealdb.com/images/media/meals/1oz4nb1765687990.jpg',
+    name:    {zh:'土豆燒茄子', en:'Potato & Eggplant',  th:'มะเขือมันฝรั่งตุ๋น'},
+    desc:    {zh:'軟糯入味超下飯',              en:'Soft & savory, perfect with rice',    th:'นุ่มเข้มข้น กินกับข้าวอร่อย'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+  {id:'chicken_feet',cat:'main',   emoji:'🍗', price:35, tags:['featured','main'],
+    name:    {zh:'滷雞爪',     en:'Braised Chicken Feet',th:'ตีนไก่ตุ๋น'},
+    desc:    {zh:'Q 彈有嚼勁，越啃越香',         en:'Chewy, snacky & full of flavor',      th:'เหนียวนุ่ม เคี้ยวเพลิน'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+  {id:'curry_beef',  cat:'main',   emoji:'🍛', price:55, tags:['featured','main'],
+    img:'https://www.themealdb.com/images/media/meals/tvttqv1504640475.jpg',
+    name:    {zh:'咖喱牛肉',   en:'Curry Beef',         th:'เนื้อแกงกะหรี่'},
+    desc:    {zh:'濃郁咖喱 + 大塊牛肉',          en:'Rich curry with big beef chunks',      th:'แกงกะหรี่เข้มข้น เนื้อชิ้นใหญ่'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+  {id:'cabbage',     cat:'main',   emoji:'🥬', price:18, tags:['main'],
+    img:'https://www.themealdb.com/images/media/meals/9nh4dl1766435484.jpg',
+    name:    {zh:'清炒白菜',   en:'Stir-fried Cabbage', th:'ผักกวางตุ้งผัด'},
+    desc:    {zh:'清淡爽口，營養滿分',           en:'Light, fresh & healthy',              th:'ผัดสดใส น้ำมันหอม'},
+    tag:     {zh:'主菜',       en:'Main',              th:'จานหลัก'}},
+
+  /* === 主食 (3) === */
+  {id:'noodles',     cat:'staple', emoji:'🍜', price:15, tags:['staple'],
+    img:'https://www.themealdb.com/images/media/meals/f3cxnc1765656994.jpg',
+    name:    {zh:'麵條',       en:'Noodles',            th:'บะหมี่'},
+    desc:    {zh:'Q 彈有勁的家常麵',             en:'Springy homemade noodles',            th:'เส้นเหนียวนุ่ม'},
+    tag:     {zh:'主食',       en:'Staple',             th:'ข้าว/เส้น'}},
+  {id:'rice',        cat:'staple', emoji:'🍚', price:8,  tags:['today','staple'],
+    img:'https://www.themealdb.com/images/media/meals/wuyd2h1765655837.jpg',
+    name:    {zh:'米飯',       en:'Steamed Rice',       th:'ข้าวสวย'},
+    desc:    {zh:'香香白米飯，一碗不夠',         en:'Fragrant white rice, want more!',     th:'ข้าวหอม ตักเพิ่มได้อีก'},
+    tag:     {zh:'主食',       en:'Staple',             th:'ข้าว/เส้น'}},
+  {id:'dumplings',   cat:'staple', emoji:'🥟', price:22, tags:['staple'],
+    img:'https://www.themealdb.com/images/media/meals/sfahy01763752319.jpg',
+    name:    {zh:'餃子',       en:'Dumplings',          th:'เกี๊ยว'},
+    desc:    {zh:'皮薄餡多，8 個一份',           en:'Thin skin, juicy filling, 8 pcs',      th:'แป้งบาง ไส้แน่น 8 ลูก'},
+    tag:     {zh:'主食',       en:'Staple',             th:'ข้าว/เส้น'}},
+
+  /* === 飲料 (2) === */
+  {id:'water',       cat:'drink',  emoji:'💧', price:5,  tags:['drink'],
+    name:    {zh:'水',         en:'Water',              th:'น้ำเปล่า'},
+    desc:    {zh:'冰冰涼涼的開水',               en:'Ice cold water',                      th:'น้ำเปล่าเย็น ๆ'},
+    tag:     {zh:'飲料',       en:'Drink',              th:'เครื่องดื่ม'}},
+  {id:'milk',        cat:'drink',  emoji:'🥛', price:12, tags:['drink'],
+    name:    {zh:'牛奶',       en:'Milk',               th:'นม'},
+    desc:    {zh:'香香濃濃的鮮奶',               en:'Rich & creamy milk',                  th:'นมสดหอมมัน'},
+    tag:     {zh:'飲料',       en:'Drink',              th:'เครื่องดื่ม'}},
+];
+
+// Filter category definitions (key → icon, label per language)
+const CATEGORIES = [
+  {key:'all',      icon:'🍽️'},
+  {key:'today',    icon:'⭐'},
+  {key:'featured', icon:'✨'},
+  {key:'main',     icon:'🥘'},
+  {key:'staple',   icon:'🍚'},
+  {key:'drink',    icon:'🥤'},
+];
+
+const I18N = {
+  zh:{
+    brand:'跳崽小厨', brandSub:'跳崽的美味菜單',
+    cart:'購物車', heroTitle:'挑你喜歡的菜，丟進我的餐盤！',
+    heroSub:'👨‍🍳 點一點卡片就能點餐 · 玩完記得按「結帳」請大人幫忙',
+    add:'加入', myOrder:'我的餐盤', total:'合計',
+    checkout:'結帳 👨‍🍳', clear:'清空餐盤',
+    orderSent:'訂單送給廚房啦！', orderSub:'等一下下就好囉～',
+    thanks:'謝謝，我等！', empty:'餐盤空空，先去點幾道菜吧～',
+    added:'已加入餐盤！', cleared:'餐盤已清空', paid:'好吃好吃～ 🎉',
+    qty:'份',
+    catAll:'全部', catToday:'今日推薦', catFeatured:'特色菜品', catMain:'主菜', catStaple:'主食', catDrink:'飲料',
+    noItems:'這分類目前沒有菜～試試別的分類吧！',
+    adminTitle:'管理圖片', enterPin:'請輸入管理員 PIN', defaultPin:'預設 PIN: 0000',
+    pinWrong:'PIN 錯誤，再試一次', adminSub:'📷 上傳你自己的食物照片，會覆蓋預設圖',
+    upload:'上傳', reset:'恢復', customBadge:'自訂', changePin:'更改 PIN', newPin:'新 PIN (4 位數)',
+    pinChanged:'PIN 已更新！', uploaded:'已上傳！', resetOk:'已恢復預設圖',
+  },
+  en:{
+    brand:'Tiao Zai Kitchen', brandSub:"Tiao Zai's tasty menu",
+    cart:'Cart', heroTitle:"Pick what you love, drop it on my plate!",
+    heroSub:'👨‍🍳 Tap a dish to order · Ask a grown-up to help check out',
+    add:'Add', myOrder:'My Plate', total:'Total',
+    checkout:'Check out 👨‍🍳', clear:'Clear plate',
+    orderSent:'Order sent to the kitchen!', orderSub:'Just a moment please~',
+    thanks:'Yay, thank you!', empty:'Your plate is empty. Pick something yummy!',
+    added:'Added to your plate!', cleared:'Plate cleared', paid:'Yummy yummy~ 🎉',
+    qty:'pcs',
+    catAll:'All', catToday:"Today's Pick", catFeatured:'Featured', catMain:'Mains', catStaple:'Staples', catDrink:'Drinks',
+    noItems:'Nothing here yet — try another category!',
+    adminTitle:'Manage Photos', enterPin:'Enter admin PIN', defaultPin:'Default PIN: 0000',
+    pinWrong:'Wrong PIN, try again', adminSub:'📷 Upload your own food photos to override the defaults',
+    upload:'Upload', reset:'Reset', customBadge:'Custom', changePin:'Change PIN', newPin:'New PIN (4 digits)',
+    pinChanged:'PIN updated!', uploaded:'Uploaded!', resetOk:'Restored default',
+  },
+  th:{
+    brand:'ครัวเตี่ยวไจ้', brandSub:'เมนูอร่อยของเตี่ยวไจ้',
+    cart:'ตะกร้า', heroTitle:'เลือกเมนูโปรด ใส่จานของฉันเลย!',
+    heroSub:'👨‍🍳 แตะการ์ดเพื่อสั่งอาหาร · กดชำระเงินแล้วเรียกผู้ใหญ่มาช่วยนะ',
+    add:'เพิ่ม', myOrder:'จานของฉัน', total:'รวม',
+    checkout:'สั่งเลย 👨‍🍳', clear:'ล้างจาน',
+    orderSent:'ส่งออเดอร์ให้ครัวแล้ว!', orderSub:'รอสักครู่นะ~',
+    thanks:'ขอบคุณครับ!', empty:'จานยังว่างอยู่ เลือกอะไรสักอย่างสิ!',
+    added:'ใส่จานเรียบร้อย!', cleared:'ล้างจานแล้ว', paid:'อร่อยมาก~ 🎉',
+    qty:'จาน',
+    catAll:'ทั้งหมด', catToday:'เมนูแนะนำ', catFeatured:'เมนูพิเศษ', catMain:'จานหลัก', catStaple:'ข้าว/เส้น', catDrink:'เครื่องดื่ม',
+    noItems:'ยังไม่มีเมนูในหมวดนี้ — ลองเลือกหมวดอื่นดู!',
+    adminTitle:'จัดการรูปภาพ', enterPin:'กรอก PIN ผู้ดูแล', defaultPin:'PIN เริ่มต้น: 0000',
+    pinWrong:'PIN ไม่ถูกต้อง ลองอีกครั้ง', adminSub:'📷 อัปโหลดรูปอาหารของคุณเองเพื่อแทนที่ค่าเริ่มต้น',
+    upload:'อัปโหลด', reset:'รีเซ็ต', customBadge:'กำหนดเอง', changePin:'เปลี่ยน PIN', newPin:'PIN ใหม่ (4 หลัก)',
+    pinChanged:'เปลี่ยน PIN แล้ว!', uploaded:'อัปโหลดแล้ว!', resetOk:'คืนค่าเริ่มต้นแล้ว',
+  },
+};
+
+let lang = 'zh';
+let activeCat = 'all';      // current filter category
+let cart = loadCart();
+
+/* ============= Category bar ============= */
+const catbar = document.getElementById('catbar');
+const emptyCat = document.getElementById('emptyCat');
+function catLabel(key){
+  return I18N[lang]['cat' + key[0].toUpperCase() + key.slice(1)];
+}
+function countInCat(key){
+  if(key === 'all') return MENU.length;
+  return MENU.filter(it => (it.tags||[]).includes(key)).length;
+}
+function renderCatbar(){
+  catbar.innerHTML = '';
+  CATEGORIES.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'cat' + (c.key===activeCat ? ' active' : '');
+    btn.dataset.cat = c.key;
+    btn.innerHTML = `
+      <span class="ic">${c.icon}</span>
+      <span class="lbl">${catLabel(c.key)}</span>
+      <span class="n">${countInCat(c.key)}</span>
+    `;
+    btn.addEventListener('click', ()=>{
+      activeCat = c.key;
+      renderCatbar();
+      renderMenu();
+    });
+    catbar.appendChild(btn);
+  });
+}
+
+/* ============= IndexedDB: custom user-uploaded images ============= */
+const DB_NAME = 'kidsMenuDB';
+const DB_STORE = 'images';
+let _dbPromise = null;
+function openDB(){
+  if(_dbPromise) return _dbPromise;
+  _dbPromise = new Promise((res, rej)=>{
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
+    };
+    req.onsuccess = e => res(e.target.result);
+    req.onerror = e => rej(e.target.error);
+  });
+  return _dbPromise;
+}
+async function getCustomImage(id){
+  try{
+    const db = await openDB();
+    return await new Promise((res, rej)=>{
+      const tx = db.transaction(DB_STORE, 'readonly');
+      const req = tx.objectStore(DB_STORE).get(id);
+      req.onsuccess = () => res(req.result || null);
+      req.onerror = () => rej(req.error);
+    });
+  }catch{return null}
+}
+async function setCustomImage(id, dataUrl){
+  const db = await openDB();
+  return new Promise((res, rej)=>{
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(dataUrl, id);
+    tx.oncomplete = () => res();
+    tx.onerror = () => rej(tx.error);
+  });
+}
+async function deleteCustomImage(id){
+  const db = await openDB();
+  return new Promise((res, rej)=>{
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).delete(id);
+    tx.oncomplete = () => res();
+    tx.onerror = () => rej(tx.error);
+  });
+}
+async function getAllCustomImages(){
+  const out = {};
+  for(const it of MENU){
+    out[it.id] = await getCustomImage(it.id);
+  }
+  return out;
+}
+// Resize uploaded image to keep storage small (max 800px, JPEG quality 0.85)
+function resizeImageFile(file, maxW=800, quality=0.85){
+  return new Promise((res, rej)=>{
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const ratio = Math.min(1, maxW / Math.max(img.width, 1));
+        const w = Math.round(img.width * ratio);
+        const h = Math.round(img.height * ratio);
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = rej;
+      img.src = e.target.result;
+    };
+    reader.onerror = rej;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ============= Render menu ============= */
+const grid = document.getElementById('grid');
+async function renderMenu(){
+  grid.innerHTML = '';
+  const customImages = await getAllCustomImages();
+  const list = (activeCat === 'all')
+    ? MENU
+    : MENU.filter(it => (it.tags||[]).includes(activeCat));
+
+  if(!list.length){
+    emptyCat.hidden = false;
+    return;
+  }
+  emptyCat.hidden = true;
+
+  list.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const imgSrc = customImages[item.id] || item.img;
+    const hasImg = !!imgSrc;
+    const imgHtml = hasImg
+      ? `<img src="${imgSrc}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img'); this.remove();">`
+      : '';
+    card.innerHTML = `
+      <div class="pic${hasImg ? ' has-img' : ''}">
+        ${imgHtml}
+        <span class="emoji">${item.emoji}</span>
+      </div>
+      <span class="tag">${item.tag[lang]}</span>
+      <div class="body">
+        <div class="name">${item.name[lang]}</div>
+        <div class="desc">${item.desc[lang]}</div>
+        <div class="row">
+          <div class="price">${item.price} ฿</div>
+          <button class="add" data-id="${item.id}">
+            <span>+</span><span data-i18n="add">${I18N[lang].add}</span>
+          </button>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', e=>{
+      // ignore when clicking the add button (it has its own handler)
+      if(e.target.closest('.add')) return;
+      addToCart(item.id, card);
+    });
+    card.querySelector('.add').addEventListener('click', e=>{
+      e.stopPropagation();
+      addToCart(item.id, card, e.currentTarget);
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* ============= Cart logic ============= */
+function loadCart(){
+  try{ return JSON.parse(localStorage.getItem('kidsMenuCart')||'{}'); }
+  catch{ return {}; }
+}
+function saveCart(){
+  localStorage.setItem('kidsMenuCart', JSON.stringify(cart));
+  renderCartCount();
+}
+function addToCart(id, cardEl, btnEl){
+  cart[id] = (cart[id]||0) + 1;
+  saveCart();
+  // small floating +1 animation
+  if(btnEl){
+    const r = btnEl.getBoundingClientRect();
+    const fp = document.createElement('div');
+    fp.className = 'float-plus';
+    fp.textContent = '+1';
+    fp.style.left = (r.left + r.width/2) + 'px';
+    fp.style.top  = (r.top - 6) + 'px';
+    document.body.appendChild(fp);
+    setTimeout(()=>fp.remove(), 900);
+  }
+  // wiggle card
+  if(cardEl){
+    cardEl.animate(
+      [{transform:'translateY(-4px) scale(1.03)'},{transform:'translateY(0) scale(1)'}],
+      {duration:300, easing:'ease-out'}
+    );
+  }
+  toast('🍽️ ' + I18N[lang].added);
+}
+function changeQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id] <= 0) delete cart[id];
+  saveCart();
+  renderCart();
+}
+function removeItem(id){
+  delete cart[id];
+  saveCart();
+  renderCart();
+}
+function clearCartAll(){
+  if(!Object.keys(cart).length) return;
+  cart = {};
+  saveCart();
+  renderCart();
+  toast('🧹 ' + I18N[lang].cleared);
+}
+function cartTotal(){
+  return Object.entries(cart).reduce((sum,[id,qty])=>{
+    const it = MENU.find(m=>m.id===id);
+    return sum + (it ? it.price*qty : 0);
+  }, 0);
+}
+function totalCount(){
+  return Object.values(cart).reduce((s,n)=>s+n,0);
+}
+
+function renderCartCount(){
+  const c = totalCount();
+  const el = document.getElementById('cartCount');
+  if(!el) return;
+  el.textContent = c;
+  el.classList.toggle('empty', c===0);
+}
+
+function renderCart(){
+  const list = document.getElementById('cartList');
+  const ids = Object.keys(cart);
+  if(!ids.length){
+    list.innerHTML = `<div class="empty">
+      <span class="big">🍽️</span>
+      <div>${I18N[lang].empty}</div>
+    </div>`;
+    document.getElementById('cartTotal').textContent = 0;
+    document.getElementById('checkout').disabled = true;
+    return;
+  }
+  document.getElementById('checkout').disabled = false;
+  list.innerHTML = '';
+  ids.forEach(id=>{
+    const it = MENU.find(m=>m.id===id);
+    if(!it) return;
+    const qty = cart[id];
+    const row = document.createElement('div');
+    row.className = 'row-item';
+    row.innerHTML = `
+      <div class="emoji">${it.emoji}</div>
+      <div class="meta">
+        <div class="nm">${it.name[lang]}</div>
+        <div class="pr">${it.price} ฿ × ${qty} = <b>${it.price*qty} ฿</b></div>
+      </div>
+      <div class="qty">
+        <button data-act="dec">−</button>
+        <span class="n">${qty}</span>
+        <button data-act="inc">+</button>
+      </div>
+      <button class="rm" title="remove">🗑️</button>
+    `;
+    row.querySelector('[data-act="inc"]').onclick = ()=>changeQty(id, +1);
+    row.querySelector('[data-act="dec"]').onclick = ()=>changeQty(id, -1);
+    row.querySelector('.rm').onclick = ()=>removeItem(id);
+    list.appendChild(row);
+  });
+  document.getElementById('cartTotal').textContent = cartTotal();
+}
+
+/* ============= Drawer open/close ============= */
+const drawer = document.getElementById('drawer');
+const scrim  = document.getElementById('scrim');
+function openCart(){
+  renderCart();
+  drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false');
+  scrim.classList.add('open');
+}
+function closeCart(){
+  drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true');
+  scrim.classList.remove('open');
+}
+document.getElementById('openCart').onclick = openCart;
+document.getElementById('closeCart').onclick = closeCart;
+document.getElementById('scrim').onclick = closeCart;
+document.getElementById('clearCart').onclick = clearCartAll;
+
+/* ============= Checkout modal ============= */
+const modal = document.getElementById('modal');
+const receiptLines = document.getElementById('receiptLines');
+document.getElementById('checkout').onclick = ()=>{
+  const ids = Object.keys(cart);
+  if(!ids.length) return;
+  let lines = '';
+  let total = 0;
+  ids.forEach(id=>{
+    const it = MENU.find(m=>m.id===id);
+    const qty = cart[id];
+    const sub = it.price * qty;
+    total += sub;
+    lines += `<div class="li"><span>${it.emoji} ${it.name[lang]} × ${qty}</span><span>${sub} ฿</span></div>`;
+  });
+  lines += `<div class="li sum"><span>${I18N[lang].total}</span><span>${total} ฿</span></div>`;
+  receiptLines.innerHTML = lines;
+  modal.classList.add('open');
+  // confetti!
+  fireConfetti();
+  // clear after "send" so kids can start over
+  setTimeout(()=>{ cart = {}; saveCart(); renderCart(); }, 400);
+};
+document.getElementById('receiptOk').onclick = ()=>{
+  modal.classList.remove('open');
+  closeCart();
+  toast('🎉 ' + I18N[lang].paid);
+};
+
+function fireConfetti(){
+  const colors = ['#ff6b6b','#ffa53b','#ffd23f','#4ecdc4','#7c5cff','#ff8ad8'];
+  for(let i=0;i<60;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[i%colors.length];
+    c.style.animationDelay = (Math.random()*0.4) + 's';
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 2200);
+  }
+}
+
+/* ============= Toast ============= */
+let toastT = null;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 1400);
+}
+
+/* ============= Language switch ============= */
+function applyLang(){
+  document.documentElement.lang = (lang==='zh'?'zh-Hant':lang==='th'?'th':'en');
+  // update all [data-i18n]
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(I18N[lang][key] != null) el.textContent = I18N[lang][key];
+  });
+  // active state on lang buttons
+  document.querySelectorAll('.lang button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.lang===lang);
+  });
+  renderCatbar();
+  renderMenu();
+  renderCart();
+}
+document.querySelectorAll('.lang button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    lang = b.dataset.lang;
+    applyLang();
+  });
+});
+
+/* ============= Admin panel (PIN + image upload) ============= */
+let adminPin = localStorage.getItem('kidsMenuAdminPin') || '0000';
+let adminAuthed = false;
+const adminModal = document.getElementById('adminModal');
+const adminPinGate = document.getElementById('adminPinGate');
+const adminContent = document.getElementById('adminContent');
+const adminPinInput = document.getElementById('adminPinInput');
+const pinError = document.getElementById('pinError');
+const adminGrid = document.getElementById('adminGrid');
+
+function openAdmin(){
+  if(adminAuthed){
+    showAdminContent();
+  } else {
+    // ensure PIN gate is visible, content hidden (defensive reset)
+    adminPinGate.hidden = false;
+    adminContent.hidden = true;
+  }
+  adminModal.classList.add('open');
+  setTimeout(()=>adminPinInput.focus(), 50);
+}
+function closeAdmin(){
+  adminModal.classList.remove('open');
+  adminPinInput.value = '';
+  pinError.hidden = true;
+  adminPinInput.classList.remove('pin-shake');
+  adminAuthed = false; // require PIN again on next open
+}
+function showAdminContent(){
+  adminAuthed = true;
+  adminPinGate.hidden = true;
+  adminContent.hidden = false;
+  renderAdminGrid();
+}
+async function renderAdminGrid(){
+  const customs = await getAllCustomImages();
+  adminGrid.innerHTML = MENU.map(item => {
+    const customUrl = customs[item.id];
+    const hasCustom = !!customUrl;
+    const fallbackUrl = item.img;
+    const thumbHtml = customUrl
+      ? `<img src="${customUrl}" alt="">`
+      : (fallbackUrl
+          ? `<img src="${fallbackUrl}" alt="">`
+          : `<span>${item.emoji}</span>`);
+    const badge = hasCustom
+      ? `<span class="custom-badge">${I18N[lang].customBadge || 'Custom'}</span>`
+      : '';
+    return `
+      <div class="admin-item">
+        <div class="admin-thumb" data-id="${item.id}">
+          ${thumbHtml}${badge}
+        </div>
+        <div class="admin-name">${item.name[lang]}</div>
+        <div class="admin-actions">
+          <label class="admin-upload" data-id="${item.id}">
+            📷 ${I18N[lang].upload}
+            <input type="file" accept="image/*" data-id="${item.id}" hidden>
+          </label>
+          <button class="admin-reset" data-id="${item.id}" ${!hasCustom ? 'disabled' : ''}>
+            🔄 ${I18N[lang].reset}
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // wire upload inputs
+  adminGrid.querySelectorAll('input[type="file"]').forEach(inp => {
+    inp.addEventListener('change', async e => {
+      const file = e.target.files[0];
+      const id = e.target.dataset.id;
+      if(!file) return;
+      try {
+        const dataUrl = await resizeImageFile(file, 800, 0.85);
+        await setCustomImage(id, dataUrl);
+        toast('📷 ' + I18N[lang].uploaded);
+        renderAdminGrid();
+        await renderMenu();
+      } catch(err) {
+        alert('上傳失敗: ' + err.message);
+      }
+    });
+  });
+  // wire reset buttons
+  adminGrid.querySelectorAll('.admin-reset').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      await deleteCustomImage(id);
+      toast('🔄 ' + I18N[lang].resetOk);
+      renderAdminGrid();
+      await renderMenu();
+    });
+  });
+}
+
+function checkPin(){
+  const entered = adminPinInput.value;
+  if(entered === adminPin){
+    pinError.hidden = true;
+    adminPinInput.classList.remove('pin-shake');
+    showAdminContent();
+  } else {
+    pinError.textContent = I18N[lang].pinWrong;
+    pinError.hidden = false;
+    adminPinInput.classList.remove('pin-shake');
+    void adminPinInput.offsetWidth;  // restart animation
+    adminPinInput.classList.add('pin-shake');
+    adminPinInput.select();
+  }
+}
+adminPinInput.addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); checkPin(); }
+});
+adminPinInput.addEventListener('input', () => {
+  // auto-submit when 4 digits entered
+  if(adminPinInput.value.length === 4) checkPin();
+});
+document.getElementById('openAdmin').onclick = openAdmin;
+document.getElementById('closeAdmin').onclick = closeAdmin;
+adminModal.addEventListener('click', e => {
+  if(e.target === adminModal) closeAdmin();
+});
+document.getElementById('changePinBtn').onclick = () => {
+  const newPin = prompt(I18N[lang].newPin + ' (目前: ' + adminPin + ')');
+  if(newPin && /^\d{4}$/.test(newPin)){
+    adminPin = newPin;
+    localStorage.setItem('kidsMenuAdminPin', newPin);
+    toast('🔑 ' + I18N[lang].pinChanged);
+  } else if(newPin !== null){
+    alert(I18N[lang].newPin);
+  }
+};
+
+/* ============= Init ============= */
+applyLang();
+renderCartCount();
+
+// ESC to close drawer/modal
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    closeCart();
+    modal.classList.remove('open');
+    closeAdmin();
+  }
+});
+</script>
+</body>
+</html>
